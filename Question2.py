@@ -1,32 +1,30 @@
-import math
-
 """
 2 - Write a program to compute the following expression for 500 sentences:
-(3! / 2+9) − (5! / 3+7) + (7! / 4+5) − (9! / 5+3) + (11! / 6+1) − (13! 7−1) …
+(3! / 2+9) − (5! / 3+7) + (7! / 4+5) − (9! / 5+3) + (11! / 6+1) − (13! / 7−1) …
 """
 
+import math
+from decimal import Decimal, getcontext
+
+getcontext().prec = 200
 
 def compute_expression(n):
-    change_sign = True
-    sign = 1
-    fact_start = 3
-    first_num = 2
-    second_num = 9
-    result = 0
-    for _ in range(n):
-        fact = math.factorial(fact_start)
-        result += sign * (fact / (first_num + second_num))
-        fact_start += 2
-        first_num += 1
-        second_num -= 2
-        if change_sign:
-            sign = -1
-            change_sign = False
-        else:
-            sign = 1
-            change_sign = True
+    result = Decimal(0)
+    sign = -1
+    for i in range(n):
+        sign *= -1
+        numerator = (2 * i) + 3
+        denominator = Decimal(i + 2) + Decimal(9 - (2 * i))
+
+        if denominator == 0:
+            print(f"division by zero in n = {i+1} and continue.")
+            continue
+
+        term_value = Decimal(math.factorial(numerator) / denominator)
+        result += Decimal(sign) * term_value
 
     return result
 
-
-print(compute_expression(500))  # 12 is error
+n = int(input("Enter n:"))
+result = compute_expression(n)
+print("result:", result)
